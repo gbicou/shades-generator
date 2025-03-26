@@ -1,23 +1,27 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander'
-import { version } from '../package.json' with { type: 'json' }
-import {tw} from "./tw";
+import {Command} from 'commander'
+import {version} from '../package.json' with {type: 'json'}
+import {shades, ShadesProjection} from "./shades";
 
 const program = new Command();
 
 program.name('palette-maker')
-program.description('Our New CLI');
+program.description('Build a palette');
 program.version(version, '-v, --version');
 
-program.command('tw')
-    .description('Tailwind palette')
+program
     .option('-n, --name [NAME]', 'color name', 'primary')
-    .argument('<string>', 'color')
+    .option('--delta [DELTA]', 'delta luminance', parseFloat)
+    .option('--range-base [RANGE_BASE]', 'range base', parseFloat)
+    .option('--bezier', 'use bezier projection', false)
+    .argument('<color>', 'base color')
     .action((arg, options) => {
-        const shades = tw(arg)
-        shades.forEach((s) => {
-            console.log(`--color-${options.name}-${s.level}: ${s.css};`)
+        shades(arg, {
+            ...options,
+            projection: options.bezier ? ShadesProjection.BEZIER : ShadesProjection.LINEAR
+        }).forEach((shade) => {
+            console.log(`--color-${options.name}-${shade.level}: ${shade.css};`)
         })
     })
 
