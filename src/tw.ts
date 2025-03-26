@@ -5,12 +5,38 @@ interface TwShade {
     css: string
 }
 
+/**
+ * Linear projection with a reference point for two segments
+ *
+ * |                   ______
+ * |       ______------
+ * |    __+
+ * |__--
+ * +-------------------------
+ *
+ * @param x0
+ * @param x1
+ * @param y0
+ * @param y1
+ * @param px
+ * @param py
+ */
+const linearProjection = (x0: number, x1: number, y0: number, y1: number, px: number, py: number)=> (x: number) => {
+    if (x < px) {
+        const slope = (py - y0) / (px - x0);
+        return y0 + slope * (x - x0);
+    }
+    if (x > px) {
+        const slope = (y1 - py) / (x1 - px);
+        return py + slope * (x - px);
+    }
+    return py
+}
+
 export function tw(base: string): TwShade[] {
 
-    const ref = new Color(base)
-    const lDelta = 0 // -0.2
+    const baseColor = new Color(base)
 
-    const rangeRef = 500
     const ranges = [
         50,
         100,
@@ -24,21 +50,16 @@ export function tw(base: string): TwShade[] {
         900,
         950,
     ]
+    const rangeBase = 500
 
-    const refL = ref.oklch.l + lDelta
+    const lDelta = 0
+    const lBase = baseColor.oklch.l + lDelta
+
+    const linear = linearProjection(0, 1000, 1, 0, rangeBase, lBase)
 
     return ranges.map((r) => {
-        let l = refL
-        if (r < rangeRef) {
-            const mL = (1 - refL) / rangeRef
-            l = 1 - r * mL
-        }
-        if (r > rangeRef) {
-            const mL = refL / (1000 - rangeRef)
-            l = refL - (r - rangeRef) * mL
-        }
-        const shade: Color = ref.clone().to('oklch')
-        shade.l = l
+        const shade: Color = baseColor.clone().to('oklch')
+        shade.l = linear(r)
 
         return { level: r, css: shade.toString() }
     })
