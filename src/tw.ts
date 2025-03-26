@@ -10,8 +10,6 @@ export function tw(base: string): TwShade[] {
     const ref = new Color(base)
     const lDelta = 0 // -0.2
 
-   // console.log('reference', ref.oklch)
-
     const rangeRef = 500
     const ranges = [
         50,
@@ -39,12 +37,9 @@ export function tw(base: string): TwShade[] {
             const mL = refL / (1000 - rangeRef)
             l = refL - (r - rangeRef) * mL
         }
-        const shade = ref.clone().to('oklch')
-        // const neutral = new Color(colors.neutral[v])
-        // shade.oklch.l = neutral.oklch.l
+        const shade: Color = ref.clone().to('oklch')
         shade.l = l
-        // console.log(r, shade.oklch)
 
-        return { level: r, css: shade.toString({format: 'oklch'}) }
+        return { level: r, css: shade.toString() }
     })
 }
