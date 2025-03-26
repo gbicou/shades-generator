@@ -52,7 +52,11 @@ const bezierProjection = (x0: number, x1: number, y0: number, y1: number, px: nu
     const curve = Bezier.quadraticFromPoints({x: x0, y: y0}, {x: px, y: py}, {x: x1, y: y1}, 0.5);
 
     return (x: number) => {
-        return curve.get(x / (x1 - x0)).y
+        const intersection = curve
+            .intersects({p1: {x, y: 0}, p2: {x, y: 1}})
+            .map((t) => curve.get(t))
+            .find((p) => p.y >= 0 && p.y <= 1);
+        return intersection?.y ?? 0
     }
 }
 
@@ -82,8 +86,10 @@ export function shades(base: string, options?: ShadesOptions): Shade[] {
         : linearProjection(0, 1000, 1, 0, rangeBase, lBase)
 
     return ranges.map((r) => {
+        const lTarget = projection(r)
+
         const shade: Color = baseColor.clone().to('oklch')
-        shade.l = projection(r)
+        shade.l = lTarget
 
         return { level: r, css: shade.toString() }
     })
