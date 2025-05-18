@@ -18,7 +18,7 @@
   "type": "module",
   "dependencies": {
     "colorjs.io": "^0.5.2",
-    "commander": "^13.1.0",
+    "commander": "^14.0.0",
     "bezier-js": "^6.1.4"
   },
   "devDependencies": {
