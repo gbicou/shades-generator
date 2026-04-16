@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "cli": "tsx src/index.ts"
+    "cli": "node src/index.ts"
   },
   "bin": {
     "shades-generator": "./dist/index.mjs"
@@ -22,7 +22,6 @@
     "bezier-js": "6.1.4"
   },
   "devDependencies": {
-    "tsx": "4.21.0",
     "typescript": "6.0.2",
     "unbuild": "3.6.1",
     "@types/bezier-js": "4.1.3"
