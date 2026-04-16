@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 import {Command} from 'commander'
-import {version} from '../package.json' with {type: 'json'}
-import {shades, ShadesProjection} from "./shades";
+import pkg from '../package.json' with {type: 'json'}
+import {shades, ShadesProjection} from "./shades.ts";
 
 const program = new Command();
 
 program.name('palette-maker')
 program.description('Build a palette');
-program.version(version, '-v, --version');
+program.version(pkg.version, '-v, --version');
 
 program
     .option('-n, --name [NAME]', 'color name', 'primary')
