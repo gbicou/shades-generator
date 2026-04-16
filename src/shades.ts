@@ -1,10 +1,12 @@
 import Color from 'colorjs.io'
 import {Bezier} from "bezier-js";
 
-export enum ShadesProjection {
-    LINEAR = 'linear',
-    BEZIER = 'bezier'
-}
+export const ShadesProjection = {
+    LINEAR: 'linear',
+    BEZIER: 'bezier'
+} as const
+
+export type ShadesProjection = typeof ShadesProjection[keyof typeof ShadesProjection]
 
 export interface ShadesOptions {
     delta?: number
